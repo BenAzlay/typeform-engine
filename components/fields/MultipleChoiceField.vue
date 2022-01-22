@@ -21,9 +21,10 @@
       @click="setSelected(choice.label)"
     >
       <span v-html="choice.label" />
-      <i
+      <fa-icon
         :class="selected.includes(choice.label) ? 'opacity-100' : 'opacity-0'"
-        class="fas fa-check float-right ml-2 self-center"
+        icon="check"
+        class="float-right ml-2 self-center"
       />
     </button>
     <transition

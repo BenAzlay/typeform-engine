@@ -73,7 +73,7 @@
           class="button button-primary h-12 flex-grow"
           @click="submitAnswers"
         >
-          <i class="fas fa-check mr-2" />
+          <fa-icon icon="check" class="mr-2" />
           Submit Answers
         </button>
         <button
@@ -83,7 +83,7 @@
           class="button button-primary h-12 w-12"
           @click="handleBottomNav('previous')"
         >
-          <i class="fas fa-chevron-up" />
+          <fa-icon icon="chevron-up" />
         </button>
         <button
           :class="[
@@ -94,7 +94,7 @@
           class="button button-primary h-12 w-12"
           @click="handleBottomNav('next')"
         >
-          <i class="fas fa-chevron-down" />
+          <fa-icon icon="chevron-down" />
         </button>
       </div>
     </div>
