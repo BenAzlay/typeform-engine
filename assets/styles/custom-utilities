@@ -1,0 +1,100 @@
+button:focus {
+  @apply outline-none;
+}
+
+input:focus {
+  @apply outline-none;
+}
+
+/* BUTTONS */
+.button {
+  @apply text-base py-2 px-4 rounded font-semibold text-center outline-none cursor-pointer;
+}
+
+.button-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* QUESTION TITLE */
+.question-title {
+  @apply text-lg mb-4;
+}
+
+.question-subtitle {
+  @apply text-base mb-4;
+}
+
+/* WELCOME SCREEN TITLE */
+.welcome-title {
+  @apply text-center whitespace-pre-wrap text-xl font-semibold mb-4;
+}
+
+.welcome-subtitle {
+  @apply text-center whitespace-pre-wrap text-lg mb-4;
+}
+
+.welcome-image {
+  @apply p-10 object-center;
+}
+
+/* MUTIPLE CHOICE */
+.mc-field-choice {
+  @apply w-full text-base py-2 px-4 mb-3 border-2 rounded font-semibold text-left outline-none cursor-pointer;
+}
+
+.mc-field-choice-selected {
+  @apply w-full text-base py-2 px-4 mb-3 border-2 rounded font-semibold text-left outline-none cursor-pointer;
+}
+
+.mc-other-text-container {
+  @apply flex justify-end items-center w-full mb-3 border-b-2 overflow-hidden;
+}
+
+.mc-other-text {
+  @apply flex-grow text-base py-2 px-4 font-semibold text-left outline-none;
+}
+
+/* NUMBER */
+.number-field-container {
+  @apply flex justify-end items-center w-full mb-3 border-2 rounded overflow-hidden;
+}
+
+.number-field-input {
+  @apply flex-grow text-base py-2 px-4 font-semibold text-right outline-none;
+}
+
+.number-field-unit {
+  @apply text-base py-2 px-4 font-semibold;
+}
+
+/* OPINION SCALE */
+.opinion-scale-square {
+  @apply border-2 py-4 px-2 flex-grow outline-none;
+  margin-left: -2px;
+}
+
+.opinion-scale-square-selected {
+  @apply z-10;
+}
+
+.opinion-scale-labels-container {
+  @apply w-full flex flex-row justify-between mt-2;
+}
+
+.opinion-scale-label {
+  @apply text-base mb-4;
+}
+
+/* SHORT TEXT */
+.short-text-field-input {
+  @apply flex-grow text-base py-2 px-4 font-semibold text-right outline-none;
+}
+
+.short-text-field-container {
+  @apply flex justify-end items-center w-full mb-3 border-2 rounded;
+}
+
+
+
+
+
