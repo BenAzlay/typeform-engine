@@ -157,9 +157,13 @@ export default {
       return this.questionnaireConfig.thankyou_screens
     },
 
+    currentQuestion () {
+      // console.log(JSON.stringify(this.fields[this.activeIndex], null, 1))
+      return this.fields[this.activeIndex]
+    },
+
     questionTitle () {
       let title = this.currentQuestion.title
-      // console.log(title)
       // Past answers
       if (title.match(/{{field:(.*)}}/)) {
         const ref = title.split(/{{field:(.*)}}/)[1]
@@ -168,10 +172,14 @@ export default {
           case 'choice':
             title = title.replace(/{{field:(.*)}}/, pastAnswer.choice.label)
             break
-          case 'number' || 'opinion_scale':
+          case 'number':
+          case 'opinion_scale':
             title = title.replace(/{{field:(.*)}}/, pastAnswer.number)
             break
           case 'text':
+          case 'short_text':
+          case 'long_text':
+          case 'website':
             title = title.replace(/{{field:(.*)}}/, pastAnswer.text)
             break
           case 'date':
@@ -212,11 +220,6 @@ export default {
       return this.questionnaireConfig.logic || []
     },
 
-    currentQuestion () {
-      // console.log(JSON.stringify(this.fields[this.activeIndex], null, 1))
-      return this.fields[this.activeIndex]
-    },
-
     currentAnswer () {
       // console.log(this.answers)
       // console.log(
@@ -245,11 +248,14 @@ export default {
         case 'date':
           return 'DateField'
         case 'short_text':
+        case 'long_text':
+        case 'website':
+        case 'email':
           return 'ShortTextField'
         case 'statement':
           return 'StatementField'
         default:
-          this.$rollbar.error('Unidentified field type')
+          console.error('Unidentified field type')
           return ''
       }
     }
@@ -640,134 +646,21 @@ export default {
         body.form_response.hidden.study_id = this.$sessionId
       }
 
-      if (this.isBraze) {
-        var attributes = {}
-        for (let i = 0; i < body.form_response.answers.length; i++) {
-          var question = this.fields.find(
-            element => element.id === body.form_response.answers[i].field.id
-          )
-
-          if (question.title.includes('  ATTRIBUTE=')) {
-            let rawAttributes = question.title.split('  ATTRIBUTE=')[1]
-            rawAttributes = rawAttributes.split('  ')[0]
-            rawAttributes = rawAttributes.split(';')
-            for (let j = 0; j < rawAttributes.length; j++) {
-              if (rawAttributes[j].includes('===')) {
-                if (body.form_response.answers[i].type === 'choice') {
-                  if (
-                    body.form_response.answers[i].choice.label ===
-                    rawAttributes[j].split('===')[1].split('?')[0]
-                  ) {
-                    if (rawAttributes[j].split('?')[1].split('!')[1]) {
-                      if (
-                        rawAttributes[j].split('?')[1].split('!')[1] === 'date'
-                      ) {
-                        attributes[
-                          rawAttributes[j].split('?')[1].split('!')[0]
-                        ] = this.dateObjectToYYYYMMDD(this.now)
-                      }
-                    } else {
-                      attributes[rawAttributes[j].split('?')[1]] = true
-                    }
-                  }
-                } else if (body.form_response.answers[i].type === 'choices') {
-                  if (
-                    body.form_response.answers[i].choices.labels.includes(
-                      rawAttributes[j].split('===')[1].split('?')[0]
-                    )
-                  ) {
-                    attributes[rawAttributes[j].split('?')[1]] = true
-                  }
-                }
-              } else if (rawAttributes[j].includes('date')) {
-                attributes[rawAttributes[j].split('?')[1]] =
-                  body.form_response.answers[i].date
-              }
-            }
-          }
-          attributes[this.questionnaireConfig.title + 'Answered'] = true
-          attributes[this.questionnaireConfig.title] = this.dateObjectToYYYYMMDD(
-            this.now
-          )
-        }
-      }
-      // if (process.env.NODE_ENV !== 'production') console.log(JSON.stringify(attributes))
-
       if (this.isRecurring && !this.pastAnswers) {
         body.form_response.hidden.recurring_order = 1
       }
 
-      // if (process.env.NODE_ENV !== 'production') console.log(JSON.stringify(body))
-
-      // Note: Too long json are breaking the pipeline, waiting for a fix
-      // if (JSON.stringify(body).length > 1500 && process.env.NODE_ENV !== 'production') {
-      //   console.log('QUESTIONNAIRE FOR DATA TEAM:')
-      //   console.log(JSON.stringify(this.fields))
-      //   body.form_response.definition.fields = {}
-      // }
-
       this.setIsLoading(true)
-      if (this.isBraze) {
-        this.postAnswers(body)
-          .then(data => data)
-          .catch(({ response }) => {
-            return new Promise(() => {
-              this.setIsLoading(false)
-              // this.$router.push({
-              //   name: 'Error',
-              //   params: {
-              //     errorType: 'updateError'
-              //   }
-              // })
-              console.log(response)
-            })
-          })
-          .then(this.updateBrazeUserAttributes(attributes))
-          .then(data => data)
-          .catch(({ response }) => {
-            return new Promise(() => {
-              this.setIsLoading(false)
-              // this.$router.push({
-              //   name: 'Error',
-              //   params: {
-              //     errorType: 'updateError'
-              //   }
-              // })
-              console.log(response)
-            })
-          })
-          .then(() => {
-            this.setIsLoading(false)
-            this.$router.push({
-              name: 'ThankYouScreen',
-              query: this.$route.query,
-              params: { screenRef: this.thankYouScreenRef, score: this.score }
-            })
-          })
-      } else {
-        this.postAnswers(body)
-          .then(data => data)
-          .catch(({ response }) => {
-            return new Promise(() => {
-              this.setIsLoading(false)
-              // this.$router.push({
-              //   name: 'Error',
-              //   params: {
-              //     errorType: 'updateError'
-              //   }
-              // })
-              console.log(response)
-            })
-          })
-          .then(() => {
-            this.setIsLoading(false)
-            this.$router.push({
-              name: 'ThankYouScreen',
-              query: this.$route.query,
-              params: { screenRef: this.thankYouScreenRef, score: this.score }
-            })
-          })
-      }
+      // this.postAnswers(body)
+
+      console.log("ANSWERS TO POST:", body)
+
+      this.setIsLoading(false)
+      this.$router.push({
+        path: 'ending',
+        query: this.$route.query,
+        params: { screenRef: this.thankYouScreenRef, score: this.score }
+      })
     }
   }
 }

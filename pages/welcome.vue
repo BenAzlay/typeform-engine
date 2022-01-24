@@ -23,7 +23,7 @@
                 <span v-html="formatTypeformText(welcomeScreen.title)" />
               </template>
               <template v-if="welcomeScreen.properties.description" #subtitle>
-                <span v-html="formatTypeformText(this.welcomeScreen.properties.description)" />
+                <span v-html="formatTypeformText(welcomeScreen.properties.description)" />
               </template>
             </screen-title>
             <div class="flex justify-center">
@@ -49,6 +49,8 @@ export default {
   },
   data () {
     return {}
+  },
+  created () {
   },
   computed: {
     ...mapState(['questionnaireConfig']),

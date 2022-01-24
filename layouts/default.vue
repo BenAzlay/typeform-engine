@@ -57,10 +57,7 @@ export default {
             -5
           ),
           '--title-color': this.questionnaireStyling.colors.question,
-          '--darken-title-color': this.lightenDarkenColor(
-            this.questionnaireStyling.colors.question,
-            -20
-          ),
+          '--darken-title-color': this.lightenDarkenColor(this.questionnaireStyling.colors.question, -20),
           '--answer-color': this.questionnaireStyling.colors.answer,
           '--lighter-answer-color': this.lightenDarkenColor(
             this.questionnaireStyling.colors.answer,
@@ -118,7 +115,7 @@ export default {
         let payload = await this.getFormConfig(formId)
         const formConfig = payload.data
         if (formConfig.id !== formId) {
-            console.error('Failed to fetch Typeform config with ID:', formId)
+          console.error('Failed to fetch Typeform config with ID:', formId)
         }
         this.updateQuestionnaireConfig(formConfig)
         // Fetch form styling
@@ -127,9 +124,9 @@ export default {
         const formStyling = payload.data
         this.updateQuestionnaireStyling(formStyling)
         if (this.questionnaireConfig.welcome_screens) {
-            this.$router.push({ path: 'welcome' })
+            this.$router.push({ path: 'welcome', query: this.$route.query })
         } else {
-            this.$router.push({ name: 'questionnaire' })
+            this.$router.push({ name: 'questionnaire', query: this.$route.query })
         }
     },
     lightenDarkenColor (col, amt) {
@@ -199,6 +196,7 @@ body {
   color: var(--title-color);
 }
 
+.welcome-subtitle,
 .question-subtitle {
   color: var(--darken-title-color);
 }

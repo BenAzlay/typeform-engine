@@ -1,11 +1,17 @@
 <template>
   <div class="w-full flex flex-col justify-start">
-    <div class="short-text-field-container">
+    <div :class="question.type !== 'long_text' ? 'short-text-field-container' : 'long-text-field-container'">
       <input
+          v-if="question.type !== 'long_text'"
           ref="input"
           type="text"
           class="short-text-field-input"
           v-model="input">
+        <textarea
+          v-else
+          ref="input"
+          class="long-text-field-input"
+          v-model="input"></textarea>
     </div>
     <button v-if="displayOkButton" class="button button-primary" @click="handleOkButtonClick">OK</button>
   </div>
@@ -60,20 +66,14 @@ export default {
       this.$emit('validityCheck', validity)
     }
   },
-  beforeCreate () {},
   created () {
     console.log(this.question)
   },
-  beforeMount () {},
   mounted () {
     if (this.answer !== undefined) {
       this.input = this.answer.text
     }
   },
-  beforeUpdate () {},
-  updated () {},
-  beforeDestroy () {},
-  destroyed () {},
   methods: {
     handleOkButtonClick () {
       this.goNext(this.formattedAnswer, false)
